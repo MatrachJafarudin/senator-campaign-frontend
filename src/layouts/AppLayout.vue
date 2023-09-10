@@ -24,15 +24,13 @@
 
 <script setup>
   import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-  import { storeToRefs } from 'pinia'
+  import { useStore } from 'vuex'
   import { onBeforeRouteUpdate } from 'vue-router'
-
-  import { useGlobalStore } from '../stores/global-store'
 
   import Navbar from '../components/navbar/Navbar.vue'
   import Sidebar from '../components/sidebar/Sidebar.vue'
 
-  const GlobalStore = useGlobalStore()
+  const store = useStore()
 
   const mobileBreakPointPX = 640
   const tabletBreakPointPX = 768
@@ -42,12 +40,12 @@
 
   const isMobile = ref(false)
   const isTablet = ref(false)
-  const { isSidebarMinimized } = storeToRefs(GlobalStore)
+  const { isSidebarMinimized } = store.state
   const checkIsTablet = () => window.innerWidth <= tabletBreakPointPX
   const checkIsMobile = () => window.innerWidth <= mobileBreakPointPX
 
   const onResize = () => {
-    isSidebarMinimized.value = checkIsTablet()
+    store.commit('updateSidebarMinimized', checkIsTablet())
 
     isMobile.value = checkIsMobile()
     isTablet.value = checkIsTablet()
@@ -66,16 +64,16 @@
   onBeforeRouteUpdate(() => {
     if (checkIsTablet()) {
       // Collapse sidebar after route change for Mobile
-      isSidebarMinimized.value = true
+      store.commit('updateSidebarMinimized', true)
     }
   })
 
   onResize()
 
-  const isFullScreenSidebar = computed(() => isTablet.value && !isSidebarMinimized.value)
+  const isFullScreenSidebar = computed(() => isTablet.value && !isSidebarMinimized)
 
   const onCloseSidebarButtonClick = () => {
-    isSidebarMinimized.value = true
+    store.commit('updateSidebarMinimized', true)
   }
 </script>
 

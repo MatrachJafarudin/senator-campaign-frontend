@@ -1,12 +1,12 @@
 <template>
   <form @submit.prevent="onsubmit">
     <va-input
-      v-model="email"
+      v-model="username"
       class="mb-4"
-      type="email"
-      :label="t('auth.email')"
-      :error="!!emailErrors.length"
-      :error-messages="emailErrors"
+      type="text"
+      :label="t('auth.username')"
+      :error="!!usernameErrors.length"
+      :error-messages="usernameErrors"
     />
 
     <va-input
@@ -20,9 +20,9 @@
 
     <div class="auth-layout__options flex items-center justify-between">
       <va-checkbox v-model="keepLoggedIn" class="mb-0" :label="t('auth.keep_logged_in')" />
-      <router-link class="ml-1 va-link" :to="{ name: 'recover-password' }">{{
+      <!-- <router-link class="ml-1 va-link" :to="{ name: 'recover-password' }">{{
         t('auth.recover_password')
-      }}</router-link>
+      }}</router-link> -->
     </div>
 
     <div class="flex justify-center mt-4">
@@ -34,24 +34,28 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import stores from '../../../stores'
   import { useI18n } from 'vue-i18n'
   const { t } = useI18n()
 
-  const email = ref('')
+  const username = ref('')
   const password = ref('')
   const keepLoggedIn = ref(false)
-  const emailErrors = ref<string[]>([])
+  const usernameErrors = ref<string[]>([])
   const passwordErrors = ref<string[]>([])
   const router = useRouter()
 
-  const formReady = computed(() => !emailErrors.value.length && !passwordErrors.value.length)
+  const formReady = computed(() => !usernameErrors.value.length && !passwordErrors.value.length)
 
   function onsubmit() {
     if (!formReady.value) return
 
-    emailErrors.value = email.value ? [] : ['Email is required']
-    passwordErrors.value = password.value ? [] : ['Password is required']
+    usernameErrors.value = username.value ? [] : ['Username harus diisi']
+    passwordErrors.value = password.value ? [] : ['Password harus diisi']
 
-    router.push({ name: 'dashboard' })
+    stores
+      .dispatch('login', { username: username.value, password: password.value })
+      .then((_) => router.push({ name: 'dashboard' }))
+      .catch((err) => console.log(err))
   }
 </script>
