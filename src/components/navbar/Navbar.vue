@@ -6,7 +6,7 @@
           :class="{ 'x-flip': isSidebarMinimized }"
           class="va-navbar__item"
           :color="colors.primary"
-          @click="isSidebarMinimized = !isSidebarMinimized"
+          @click="store.commit('updateSidebarMinimized', !store.state.isSidebarMinimized)"
         />
         <router-link to="/">
           <vuestic-logo class="logo" />
@@ -29,25 +29,24 @@
       </va-button>
     </div>
     <template #right>
-      <app-navbar-actions class="app-navbar__actions" :user-name="userName" />
+      <app-navbar-actions class="app-navbar__actions" :user-name="store.state.authUser.name" />
     </template>
   </va-navbar>
 </template>
 
 <script setup>
   import { computed } from 'vue'
-  import { storeToRefs } from 'pinia'
-  import { useGlobalStore } from '../../stores/global-store'
+  import { useStore } from 'vuex'
   import { useI18n } from 'vue-i18n'
   import { useColors } from 'vuestic-ui'
   import VuesticLogo from '../VuesticLogo.vue'
   import VaIconMenuCollapsed from '../icons/VaIconMenuCollapsed.vue'
   import AppNavbarActions from './components/AppNavbarActions.vue'
 
-  const GlobalStore = useGlobalStore()
+  const store = useStore()
   const { t } = useI18n()
 
-  const { isSidebarMinimized, userName } = storeToRefs(GlobalStore)
+  const { isSidebarMinimized } = store.state
 
   const { getColors } = useColors()
   const colors = computed(() => getColors())

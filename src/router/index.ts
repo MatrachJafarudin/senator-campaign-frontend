@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { getCookie } from '../libs/utils'
 
 import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
@@ -16,6 +17,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'admin',
     path: '/admin',
     component: AppLayout,
+    meta: { requiresAuth: true },
     children: [
       {
         name: 'dashboard',
@@ -226,5 +228,22 @@ const router = createRouter({
   },
   routes,
 })
+
+router.beforeEach((to, _, next) => {
+  if (to.matched.some((route) => route.meta.requiresAuth) && to.name !== 'login') {
+    if (!isAuthenticated()) {
+      next({ name: 'login' })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
+const isAuthenticated = () => {
+  const accessToken = getCookie('accessToken')
+  return !!accessToken
+}
 
 export default router
