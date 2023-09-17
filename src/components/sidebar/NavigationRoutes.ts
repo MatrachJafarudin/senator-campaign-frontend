@@ -37,6 +37,34 @@ export default {
       ],
     },
     {
+      name: 'voters',
+      displayName: 'menu.voters',
+      meta: {
+        icon: 'vuestic-iconset-forms',
+      },
+      disabled: true,
+      children: [
+        {
+          name: 'listVoters',
+          displayName: 'menu.voters-list',
+        },
+      ],
+    },
+    {
+      name: 'area',
+      displayName: 'menu.area',
+      meta: {
+        icon: 'vuestic-iconset-forms',
+      },
+      disabled: true,
+      children: [
+        {
+          name: 'area-list',
+          displayName: 'menu.area-list',
+        },
+      ],
+    },
+    {
       name: 'forms',
       displayName: 'menu.forms',
       meta: {

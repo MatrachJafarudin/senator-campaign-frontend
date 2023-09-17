@@ -48,6 +48,40 @@ const routes: Array<RouteRecordRaw> = [
         ],
       },
       {
+        name: 'voters',
+        path: 'voters',
+        component: RouteViewComponent,
+        children: [
+          {
+            name: 'listVoters',
+            path: 'list',
+            component: () => import('../pages/admin/voters/VotersList.vue'),
+          },
+          {
+            name: 'addVoters',
+            path: 'add',
+            component: () => import('../pages/admin/voters/VotersForm.vue'),
+          },
+        ],
+      },
+      {
+        name: 'area',
+        path: 'area',
+        component: RouteViewComponent,
+        children: [
+          {
+            name: 'area-list',
+            path: 'area-list',
+            component: () => import('../pages/admin/area/AreaList.vue'),
+          },
+          {
+            name: 'area-add',
+            path: 'area-add',
+            component: () => import('../pages/admin/area/AreaForm.vue'),
+          },
+        ],
+      },
+      {
         name: 'forms',
         path: 'forms',
         component: RouteViewComponent,
